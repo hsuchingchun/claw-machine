@@ -21,7 +21,7 @@ import { useFrame } from "@react-three/fiber";
 
 // import Box from "@/component/Box";
 
-function ClawModel({ clawPos, isClawDown }) {
+function ClawModel({ clawPos, isClawDown, isBearShow }) {
   const clawModel = useGLTF("claw.glb");
   const clawRef = useRef();
 
@@ -31,6 +31,12 @@ function ClawModel({ clawPos, isClawDown }) {
       clawRef.current.traverse((child) => {
         if (child.name == "claw") {
           child.position.set(clawPos.x, clawPos.y + 2.85, clawPos.z);
+          // 抓出 bear 子模型，根據 isClawDown 顯示與否
+          child.traverse((subChild) => {
+            if (subChild.name === "bear") {
+              subChild.visible = isBearShow;
+            }
+          });
         }
 
         if (child.name == "clawBase") {
@@ -64,6 +70,7 @@ export default function Home() {
 
   const [clawPos, setClawPos] = useState({ x: 0, y: 0, z: 0 });
   const [isClawDown, setIsClawDown] = useState(false);
+  const [isBearShow, setBearShow] = useState(false);
 
   return (
     <div className="w-full h-screen">
@@ -100,7 +107,11 @@ export default function Home() {
           {/* <Box args={[1, 1, 1]}></Box> */}
 
           <Suspense fallback={null}>
-            <ClawModel clawPos={clawPos} isClawDown={isClawDown} />
+            <ClawModel
+              clawPos={clawPos}
+              isClawDown={isClawDown}
+              isBearShow={isBearShow}
+            />
           </Suspense>
 
           <Environment
@@ -123,6 +134,7 @@ export default function Home() {
             setClawPos={setClawPos}
             isClawDown={isClawDown}
             setIsClawDown={setIsClawDown}
+            setBearShow={setBearShow}
           />
           <CameraControls />
           {/* 參考輔助線 */}

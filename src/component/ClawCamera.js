@@ -3,9 +3,14 @@ import { useFrame } from "@react-three/fiber";
 import { useRef, useState } from "react";
 import gsap from "gsap";
 import Dialog from "./Dialog";
-import ResultMessage from "./ResultMessage";
 
-function ClawCamera({ clawPos, setClawPos, isClawDown, setIsClawDown }) {
+function ClawCamera({
+  clawPos,
+  setClawPos,
+  isClawDown,
+  setIsClawDown,
+  setBearShow,
+}) {
   const camRef = useRef();
   const [showDialog, setShowDialog] = useState(false);
   const [result, setResult] = useState(null);
@@ -55,10 +60,12 @@ function ClawCamera({ clawPos, setClawPos, isClawDown, setIsClawDown }) {
         console.log("結果", newResult);
 
         setIsClawDown(true);
+        setBearShow(false);
         gsap.to(clawPos, {
           y: -0.7,
           duration: 3,
           onComplete: () => {
+            setBearShow(newResult !== 3);
             gsap.to(clawPos, {
               y: 0.3,
               duration: 2,
@@ -80,6 +87,7 @@ function ClawCamera({ clawPos, setClawPos, isClawDown, setIsClawDown }) {
   const handleCloseDialog = () => {
     setShowDialog(false);
     setCanMove(true);
+    setBearShow(false);
   };
 
   return (
