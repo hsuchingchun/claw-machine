@@ -18,7 +18,6 @@ import ClawCamera from "@/component/ClawCamera";
 
 import { Suspense, useState, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import { child } from "firebase/database";
 
 // import Box from "@/component/Box";
 

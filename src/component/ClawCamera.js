@@ -1,10 +1,15 @@
 import { PerspectiveCamera, useKeyboardControls } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import gsap from "gsap";
+import Dialog from "./Dialog";
+import ResultMessage from "./ResultMessage";
 
 function ClawCamera({ clawPos, setClawPos, isClawDown, setIsClawDown }) {
   const camRef = useRef();
+  const [showDialog, setShowDialog] = useState(false);
+  const [result, setResult] = useState(null);
+  const [canMove, setCanMove] = useState(true);
 
   // 鍵盤控制器
   const [, getKeys] = useKeyboardControls();
@@ -15,7 +20,7 @@ function ClawCamera({ clawPos, setClawPos, isClawDown, setIsClawDown }) {
 
   useFrame(() => {
     const { forward, backward, left, right, jump } = getKeys(); //偵測按鈕狀態
-    if (!isClawDown) {
+    if (!isClawDown && canMove) {
       if (forward) {
         //box 往前
         if (clawPos.z > -limitY) {
@@ -41,16 +46,13 @@ function ClawCamera({ clawPos, setClawPos, isClawDown, setIsClawDown }) {
         }
       }
       if (jump) {
-        //隨機判斷是否中獎
-
-        const random = Math.random();
-        const isWin = random < 0.5;
-
         const getRandomInt = function (max) {
           return Math.floor(Math.random() * max);
         };
-
-        console.log("結果", getRandomInt(4));
+        const newResult = getRandomInt(4);
+        setResult(newResult);
+        setCanMove(false);
+        console.log("結果", newResult);
 
         setIsClawDown(true);
         gsap.to(clawPos, {
@@ -62,6 +64,7 @@ function ClawCamera({ clawPos, setClawPos, isClawDown, setIsClawDown }) {
               duration: 2,
               onComplete: () => {
                 setIsClawDown(false);
+                setShowDialog(true);
               },
             });
           },
@@ -73,6 +76,12 @@ function ClawCamera({ clawPos, setClawPos, isClawDown, setIsClawDown }) {
       camRef.current.lookAt(0, 1, 0);
     }
   });
+
+  const handleCloseDialog = () => {
+    setShowDialog(false);
+    setCanMove(true);
+  };
+
   return (
     <>
       <PerspectiveCamera
@@ -80,6 +89,11 @@ function ClawCamera({ clawPos, setClawPos, isClawDown, setIsClawDown }) {
         makeDefault
         position={[0, 1, 3]} // 3 ~ 6
       />
+      <Dialog
+        result={result}
+        isOpen={showDialog}
+        onClose={handleCloseDialog}
+      ></Dialog>
     </>
   );
 }
