@@ -87,7 +87,7 @@ function ClawCamera({ clawPos, setClawPos, isClawDown, setIsClawDown }) {
       <PerspectiveCamera
         ref={camRef}
         makeDefault
-        position={[0, 1, 3]} // 3 ~ 6
+        position={[0, 1, 5]} // 3 ~ 6
       />
       <Dialog
         result={result}

@@ -97,7 +97,7 @@ export default function Home() {
             </RoundedBox>
           )}
 
-          <Box args={[1, 1, 1]}></Box>
+          {/* <Box args={[1, 1, 1]}></Box> */}
 
           <Suspense fallback={null}>
             <ClawModel clawPos={clawPos} isClawDown={isClawDown} />
@@ -126,7 +126,7 @@ export default function Home() {
           />
           <CameraControls />
           {/* 參考輔助線 */}
-          <axesHelper args={[10]} />
+          {/* <axesHelper args={[10]} /> */}
         </Canvas>
       </KeyboardControls>
     </div>
